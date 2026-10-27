@@ -1,0 +1,15 @@
+# SYNTHETIC LOG A - LumiCam C2 (fictional) - not real data
+# Format: timestamp | component | event | key=value pairs
+# Assumption: device clock is local time, offset +05:30. Day 1 = 2026-01-10, Day 2 = 2026-01-11 (SYNTHETIC dates)
+2026-01-10T18:40:00+05:30 | camerad | ARMED | mode=night
+2026-01-10T23:55:02+05:30 | cloud-agent | SESSION_SEEN | session=S-0002 known=false
+2026-01-11T02:10:07+05:30 | cloud-agent | CMD_RECEIVED | cmd=set_motion_alert value=off session=S-0002
+2026-01-11T02:10:07+05:30 | config | CONFIG_CHANGE | key=motion_alert old=on new=off
+2026-01-11T02:14:11+05:30 | uploader | UPLOAD_START | clip=clip_001 dest=storage.lumicam.example
+2026-01-11T02:14:40+05:30 | uploader | UPLOAD_DONE | clip=clip_001 dest=storage.lumicam.example
+2026-01-11T02:22:05+05:30 | uploader | UPLOAD_START | clip=clip_002 dest=storage.lumicam.example
+2026-01-11T02:22:33+05:30 | uploader | UPLOAD_DONE | clip=clip_002 dest=storage.lumicam.example
+2026-01-11T02:30:48+05:30 | uploader | UPLOAD_START | clip=clip_003 dest=storage.lumicam.example
+2026-01-11T02:31:15+05:30 | uploader | UPLOAD_DONE | clip=clip_003 dest=storage.lumicam.example
+this line is deliberately malformed to test error handling
+2026-01-11T09:05:00+05:30 | camerad | STATUS | state=running

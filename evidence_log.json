@@ -1,0 +1,221 @@
+{
+  "case": "IoT Device Forensic Plan (SYNTHETIC)",
+  "baseline": {
+    "camera_console_synthetic_A.log": {
+      "sha256": "ad1d0c5f2b7c80aff2ff6739173e5f14369561eb020b51d2476fdc495fe8ec4a",
+      "size_bytes": 1259,
+      "hashed_at_utc": "2026-10-27T12:22:21Z"
+    },
+    "camera_console_synthetic_B.log": {
+      "sha256": "36f1c40006de149f172b7a9ae8c70911aadc02f3713e3c2e7aa6183dd590a583",
+      "size_bytes": 853,
+      "hashed_at_utc": "2026-10-27T12:22:21Z"
+    }
+  },
+  "actions": [
+    {
+      "timestamp_utc": "2026-10-27T12:22:21Z",
+      "command": "evidence_tool.py init",
+      "action": "init",
+      "result": "2 file(s) hashed"
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:22:29Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "PASS",
+      "details": {
+        "camera_console_synthetic_A.log": "OK",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:22:34Z",
+      "command": "evidence_tool.py parse --file evidence/camera_console_synthetic_A.log",
+      "action": "parse",
+      "result": "DONE",
+      "details": {
+        "file": "camera_console_synthetic_A.log",
+        "integrity": "OK",
+        "sha256_now": "ad1d0c5f2b7c80aff2ff6739173e5f14369561eb020b51d2476fdc495fe8ec4a",
+        "events": 11,
+        "malformed_lines": [
+          14
+        ],
+        "flags": [
+          "UNRECOGNISED_SESSION"
+        ]
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:22:40Z",
+      "command": "evidence_tool.py parse --file evidence/camera_console_synthetic_B.log",
+      "action": "parse",
+      "result": "DONE",
+      "details": {
+        "file": "camera_console_synthetic_B.log",
+        "integrity": "OK",
+        "sha256_now": "36f1c40006de149f172b7a9ae8c70911aadc02f3713e3c2e7aa6183dd590a583",
+        "events": 9,
+        "malformed_lines": [],
+        "flags": [
+          "UNLISTED_PROCESS",
+          "CONFIG_WITHOUT_CMD",
+          "NON_VENDOR_DEST",
+          "NON_VENDOR_DEST",
+          "NON_VENDOR_DEST"
+        ]
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:22:54Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "FAIL",
+      "details": {
+        "camera_console_synthetic_A.log": "MISMATCH",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:23:07Z",
+      "command": "evidence_tool.py parse --file evidence/camera_console_synthetic_A.log",
+      "action": "parse",
+      "result": "REFUSED (MISMATCH)",
+      "details": {
+        "file": "camera_console_synthetic_A.log",
+        "sha256_now": "e10a4ebdcc2beec214ac697d5f20c6ced73533fdddcbe2e8c78eaae7306adf21"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:23:17Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "PASS",
+      "details": {
+        "camera_console_synthetic_A.log": "OK",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:34:46Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "FAIL",
+      "details": {
+        "camera_console_synthetic_A.log": "MISMATCH",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:34:56Z",
+      "command": "evidence_tool.py parse --file evidence/camera_console_synthetic_A.log",
+      "action": "parse",
+      "result": "REFUSED (MISMATCH)",
+      "details": {
+        "file": "camera_console_synthetic_A.log",
+        "sha256_now": "e10a4ebdcc2beec214ac697d5f20c6ced73533fdddcbe2e8c78eaae7306adf21"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:35:11Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "PASS",
+      "details": {
+        "camera_console_synthetic_A.log": "OK",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:38:02Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "PASS",
+      "details": {
+        "camera_console_synthetic_A.log": "OK",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:38:38Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "FAIL",
+      "details": {
+        "camera_console_synthetic_A.log": "MISMATCH",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:38:38Z",
+      "command": "evidence_tool.py parse --file evidence/camera_console_synthetic_A.log",
+      "action": "parse",
+      "result": "REFUSED (MISMATCH)",
+      "details": {
+        "file": "camera_console_synthetic_A.log",
+        "sha256_now": "e57b4035502feac865e8b3bbb4d009a6fbed0037ac2c7d0df709642b41286241"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:38:38Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "FAIL",
+      "details": {
+        "camera_console_synthetic_A.log": "MISMATCH",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:45:25Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "FAIL",
+      "details": {
+        "camera_console_synthetic_A.log": "MISMATCH",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:47:14Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "PASS",
+      "details": {
+        "camera_console_synthetic_A.log": "OK",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:52:16Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "PASS",
+      "details": {
+        "camera_console_synthetic_A.log": "OK",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T12:56:05Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "PASS",
+      "details": {
+        "camera_console_synthetic_A.log": "OK",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    },
+    {
+      "timestamp_utc": "2026-10-27T13:09:18Z",
+      "command": "evidence_tool.py verify",
+      "action": "verify",
+      "result": "PASS",
+      "details": {
+        "camera_console_synthetic_A.log": "OK",
+        "camera_console_synthetic_B.log": "OK"
+      }
+    }
+  ]
+}

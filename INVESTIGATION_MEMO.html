@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Device Forensic Plan: Investigation Memo - Deeptansh Nagar (500121033)</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #eff6ff;
+      --secondary: #0f766e;
+      --text: #1f2937;
+      --text-muted: #4b5563;
+      --border: #e5e7eb;
+      --bg-alt: #f9fafb;
+      --tag-pass: #059669;
+      --tag-fail: #dc2626;
+      --tag-warn: #d97706;
+      --code-bg: #0f172a;
+      --code-text: #f8fafc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: #f3f4f6;
+      margin: 0;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 48px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      border-radius: 8px;
+    }
+
+    .header-card {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      color: var(--primary);
+      font-size: 26px;
+      margin: 0 0 12px 0;
+      line-height: 1.25;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px 24px;
+      font-size: 14px;
+      background: var(--primary-light);
+      padding: 14px 18px;
+      border-radius: 6px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .meta-item strong {
+      color: var(--primary);
+      display: inline-block;
+      width: 140px;
+    }
+
+    h2 {
+      color: var(--primary);
+      font-size: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      margin-top: 36px;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 16px;
+      color: #111827;
+      margin-top: 24px;
+      margin-bottom: 10px;
+    }
+
+    p, li {
+      font-size: 14.5px;
+      color: var(--text);
+    }
+
+    blockquote {
+      margin: 16px 0;
+      padding: 12px 20px;
+      background-color: var(--primary-light);
+      border-left: 4px solid var(--secondary);
+      font-style: italic;
+      color: #1e293b;
+      border-radius: 0 6px 6px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px 0;
+      font-size: 13.5px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #f8fafc;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    tr:nth-child(even) td {
+      background-color: var(--bg-alt);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-pass { background-color: #d1fae5; color: var(--tag-pass); }
+    .badge-fail { background-color: #fee2e2; color: var(--tag-fail); }
+    .badge-warn { background-color: #fef3c7; color: var(--tag-warn); }
+    .badge-info { background-color: #e0f2fe; color: #0369a1; }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 14px 18px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12.5px;
+      line-height: 1.45;
+      overflow-x: auto;
+      margin: 14px 0 20px 0;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-size: 13px;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .diagram-box {
+      background-color: #fafafa;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 16px;
+      margin: 18px 0;
+      font-family: monospace;
+      font-size: 12px;
+      white-space: pre;
+      overflow-x: auto;
+      line-height: 1.35;
+      color: #1f2937;
+    }
+
+    .signature-card {
+      margin-top: 30px;
+      padding: 18px 24px;
+      background: #fafafa;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+      .container {
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      h2 { page-break-after: avoid; }
+      table, pre, .diagram-box, .signature-card { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header-card">
+    <h1>IoT Device Forensic Plan: Investigation Memo<br><span style="font-size: 18px; color: #64748b; font-weight: normal;">(SYNTHETIC Case Evaluation & Reproducible Test)</span></h1>
+    <div class="meta-grid">
+      <div class="meta-item"><strong>Student Name:</strong> DEEPTANSH NAGAR</div>
+      <div class="meta-item"><strong>Student ID:</strong> 500121033</div>
+      <div class="meta-item"><strong>Project Code:</strong> DF-PBL-026</div>
+      <div class="meta-item"><strong>Performance Mode:</strong> Investigation Memo</div>
+      <div class="meta-item"><strong>Evaluation Date:</strong> October 27, 2026</div>
+      <div class="meta-item"><strong>Status:</strong> Final Complete Submission</div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <h2>Executive Overview</h2>
+  <p>This investigation memo documents the forensic acquisition planning, chain-of-custody integrity verification, and analytical hypothesis testing for an incident involving an unauthorized configuration change and video uploads on a smart security camera. All data, devices, and logs analyzed in this report are <strong>SYNTHETIC</strong>.</p>
+  
+  <p>The investigation follows defensible digital forensics practices aligned with NIST SP 800-86 and ISO/IEC 27037: strictly segregating observation from inference, evaluating competing hypotheses via an evidence matrix, enforcing cryptographic integrity gating (SHA-256), and verifying test reproducibility through an automated Python evidence management utility.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Rubric Criterion</th>
+        <th style="width: 15%; text-align: center;">Weight</th>
+        <th>Where Addressed in This Memo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Problem Framing & Reasoning</strong></td>
+        <td style="text-align: center;">20%</td>
+        <td>Section 1: Scenario framing, precise forensic question, 4 competing hypotheses (H1–H4), expected separation patterns.</td>
+      </tr>
+      <tr>
+        <td><strong>Technical Execution</strong></td>
+        <td style="text-align: center;">25%</td>
+        <td>Sections 2, 3, and 5: Architecture map, acquisition plan, on/off decision tree, <code>evidence_tool.py</code> execution.</td>
+      </tr>
+      <tr>
+        <td><strong>Evidence Integrity</strong></td>
+        <td style="text-align: center;">15%</td>
+        <td>Sections 3.1, 3.4, and 5: RFC 3227 order of volatility, SHA-256 hashing, chain-of-custody, tamper-gate test.</td>
+      </tr>
+      <tr>
+        <td><strong>Analysis & Limitations</strong></td>
+        <td style="text-align: center;">20%</td>
+        <td>Sections 4 and 6: Evidence matrix (M1–M5), pending items (P1–P6), technical limitations (H1 untested).</td>
+      </tr>
+      <tr>
+        <td><strong>Deliverable Quality</strong></td>
+        <td style="text-align: center;">10%</td>
+        <td>Structured investigation memo format, detailed component tables, risk register, clean typography.</td>
+      </tr>
+      <tr>
+        <td><strong>Defense & Originality</strong></td>
+        <td style="text-align: center;">10%</td>
+        <td>Sections 7 and 9: Defensible conclusions without overclaiming, verified sources, authentic student AI declaration.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION 1 -->
+  <h2>1. Problem Statement & Hypotheses</h2>
+
+  <h3>1.1 Synthetic Incident Scenario</h3>
+  <p>An office administrator reported that a deployed smart camera uploaded three video clips between 02:14 and 02:31 while the facility was closed and unoccupied. The following morning, the owner discovered that motion detection notifications had been switched to <strong>OFF</strong>. The owner stated they did not disable the notifications and did not authorize video clip exports.</p>
+
+  <div class="diagram-box">
+=================================== SYNTHETIC INCIDENT TIMELINE ===================================
+
+Day 1, 18:40:00 (UTC 13:10)   Day 1, 23:55:02 (UTC 18:25)   Day 2, 02:10:07 (UTC 20:40)   Day 2, 02:14 - 02:31   Day 2, 09:05:00
+[ Office Closes / Armed ] --> [ New Cloud App Session ] -> [ Alert Changed to OFF ] --> [ 3 Clips Uploaded ] -> [ Reported ]
+  camerad: mode=night           session=S-0002 known=false   Cloud API cmd_received        17-minute cluster       Device powered on
+===================================================================================================</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Specification Category</th>
+        <th>System Parameter (SYNTHETIC)</th>
+        <th>Forensic Relevance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Target Device</strong></td>
+        <td>"LumiCam C2" Indoor Security Camera</td>
+        <td>Subject edge device containing volatile RAM and non-volatile flash.</td>
+      </tr>
+      <tr>
+        <td><strong>Hardware Platform</strong></td>
+        <td>Embedded 32-bit ARM SoC, 128 MB RAM, 16 MB SPI Flash</td>
+        <td>Determines volatile memory volatility and acquisition interfaces.</td>
+      </tr>
+      <tr>
+        <td><strong>Interfaces</strong></td>
+        <td>Wi-Fi 802.11 b/g/n (2.4 GHz), 3.3V UART header, MicroSD slot</td>
+        <td>Physical and logical vectors for extraction (D1, D6).</td>
+      </tr>
+      <tr>
+        <td><strong>Firmware & OS</strong></td>
+        <td>Embedded Linux v2.3.1 (Kernel 4.9.x, BusyBox)</td>
+        <td>Defines running process lists and standard daemon behaviors.</td>
+      </tr>
+      <tr>
+        <td><strong>Cloud & App Endpoints</strong></td>
+        <td><code>api.lumicam.example</code>, <code>storage.lumicam.example</code></td>
+        <td>RFC 2606 reserved documentation domains handling API commands and video storage.</td>
+      </tr>
+      <tr>
+        <td><strong>Local Network</strong></td>
+        <td><code>192.0.2.0/24</code>, Camera IP: <code>192.0.2.45</code></td>
+        <td>RFC 5737 documentation prefix isolating local Wi-Fi state.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>1.2 Forensic Question & Boundaries</h3>
+  <blockquote>
+    <strong>Forensic Question:</strong> Based on the evidence that can be lawfully acquired from the synthetic LumiCam C2 camera, its local network environment, its companion application, and associated cloud service records, what best explains the modification of the motion alert setting to OFF at 02:10 and the three video clip uploads between 02:14 and 02:31 on Day 2, and with what level of certainty?
+  </blockquote>
+  <p><strong>In Scope:</strong> Technical examination of volatile memory on the live camera, non-volatile onboard flash storage, removable storage (MicroSD), router transaction logs and DHCP leases, mobile companion application artifacts, and vendor cloud API access logs.<br>
+  <strong>Out of Scope:</strong> Identification of real-world human actors, legal attribution of motive or intent, and investigation of any real third-party devices, cloud accounts, or proprietary networks.</p>
+
+  <h3>1.3 Competing Alternative Hypotheses</h3>
+  <ul>
+    <li><strong>H1 (Device Compromise):</strong> The camera's local software, runtime memory, or firmware was altered by an unauthorized party via local serial interface, network vulnerability, or unauthorized executable, bypassing cloud authorization.</li>
+    <li><strong>H2 (Cloud Account Misuse):</strong> An unauthorized party compromised the owner's cloud credentials or hijacked an authentication token (reflected by <code>session=S-0002</code>) to dispatch valid management commands through the cloud API.</li>
+    <li><strong>H3 (Benign Malfunction):</strong> A software fault, cloud synchronization retry race condition, or firmware defect altered the setting and initiated clip uploads without malicious intervention.</li>
+    <li><strong>H4 (Authorized User Action):</strong> An authorized user with legitimate access (e.g. secondary family member or keyholder) altered the setting and forgot or failed to inform the primary owner.</li>
+  </ul>
+
+  <!-- SECTION 2 -->
+  <h2>2. Evidence Inventory & Volatility Hierarchy</h2>
+
+  <div class="diagram-box">
++----------------------------------------------------------------------------------------------------+
+|                                    EVIDENCE ARCHITECTURE MAP                                       |
+|                                                                                                    |
+|    +-----------------------------+                             +------------------------------+    |
+|    |      LUMICAM C2 CAMERA      |                             |         VENDOR CLOUD         |    |
+|    |                             |      D1: Wi-Fi Traffic      |                              |    |
+|    |  +-----------------------+  |   (192.0.2.45 -> Router)    |  +------------------------+  |    |
+|    |  |  RAM 128 MB (E1)      |  |                             |  | Cloud API (E6)         |  |    |
+|    |  |  *Most Volatile*      |  |                             |  | api.lumicam.example    |  |    |
+|    |  +-----------------------+  |                             |  +------------------------+  |    |
+|    |  |  SPI Flash 16 MB (E3) |  |                             |  | Cloud Storage (E6)     |  |    |
+|    |  |  Firmware v2.3.1      |  |                             |  | storage.lumicam.example|  |    |
+|    |  +-----------------------+  |                             |  +------------------------+  |    |
+|    |  |  MicroSD Card (E4)    |  |                             +--------------+---------------+    |
+|    |  |  Local video / logs   |  |                                            ^                    |
+|    |  +-----------------------+  |                                            | D4: HTTPS Admin    |
+|    |  |  UART Header 3.3V     |  |                             +--------------+---------------+    |
+|    |  +-----------+-----------+  |                             |   MOBILE COMPANION APP (E5)  |    |
+|    +--------------|--------------+                             |   "LumiView" Application     |    |
+|                   |                                            +------------------------------+    |
+|                   | D6: Serial Read-Only Capture                              ^                    |
+|                   v                                                           |                    |
+|    +-----------------------------+                             +--------------+---------------+    |
+|    |     EXAMINER WORKSTATION    |                             |     OFFICE ROUTER / GW (E2)  |    |
+|    |   FTDI 3.3V UART Adapter    |                             |     192.0.2.1 / DHCP Server  |    |
+|    +-----------------------------+                             +------------------------------+    |
++----------------------------------------------------------------------------------------------------+</div>
+
+  <h3>2.1 Order of Volatility (RFC 3227)</h3>
+  <p>Evidence acquisition strictly follows the volatility order defined in <strong>RFC 3227</strong>:</p>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 10%; text-align: center;">Order</th>
+        <th style="width: 10%;">ID</th>
+        <th style="width: 30%;">Evidence Location</th>
+        <th style="width: 15%; text-align: center;">Volatility</th>
+        <th>Risk if Collection Delayed</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;">1</td>
+        <td><strong>E1</strong></td>
+        <td>Camera RAM & Active Sockets</td>
+        <td style="text-align: center;"><span class="badge badge-fail">High</span></td>
+        <td>Instantly lost upon power interruption; overwritten during ongoing execution.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">2</td>
+        <td><strong>E2</strong></td>
+        <td>Router State & DHCP/NAT Tables</td>
+        <td style="text-align: center;"><span class="badge badge-warn">Medium-High</span></td>
+        <td>Overwritten by circular logging or state expiration under high traffic.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">3</td>
+        <td><strong>E5</strong></td>
+        <td>Companion App Local Cache</td>
+        <td style="text-align: center;"><span class="badge badge-warn">Medium</span></td>
+        <td>Subject to automatic cloud synchronization overwrites upon app launch.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">4</td>
+        <td><strong>E6</strong></td>
+        <td>Cloud API & Storage Telemetry</td>
+        <td style="text-align: center;"><span class="badge badge-info">Medium</span></td>
+        <td>Subject to vendor retention windows (often 7–30 days) and account modification.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">5</td>
+        <td><strong>E4</strong></td>
+        <td>MicroSD Video & Offline Cache</td>
+        <td style="text-align: center;"><span class="badge badge-pass">Low</span></td>
+        <td>Non-volatile, but can be overwritten by circular ring-buffer recording if left powered on.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">6</td>
+        <td><strong>E3</strong></td>
+        <td>Camera SPI NOR Flash (Firmware)</td>
+        <td style="text-align: center;"><span class="badge badge-pass">Lowest</span></td>
+        <td>Highly persistent. Low risk if extracted with appropriate hardware tools.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION 3 -->
+  <h2>3. Acquisition Plan & Risk Management</h2>
+
+  <h3>3.1 On/Off Decision Tree</h3>
+  <div class="diagram-box">
+                          [ Physical Device Identified ]
+                                         |
+                                         v
+                      [ Is the camera currently powered ON? ]
+                                   /           \
+                           YES    /             \   NO
+                                 /               \
+                                v                 v
+                 [ Do NOT unplug / power off ]     [ Do NOT power on ]
+                 [ Record clock discrepancy  ]     [ E1 (RAM) lost: log limitation ]
+                                |                          |
+                                v                          v
+                 [ Can read-only UART be tapped? ]         |
+                           /          \                    |
+                   YES    /            \   NO              |
+                         /              \                  |
+                        v                v                 |
+       +-----------------------+   +--------------------+  |
+       | E1: Live RAM Capture  |   | Note limitation:   |  |
+       | Run read-only commands|   | live state missed; |  |
+       | Log all console I/O   |   | proceed to network |  |
+       +-----------+-----------+   +---------+----------+  |
+                   |                         |             |
+                   +------------+------------+             |
+                                |                          |
+                                v                          |
+               [ Network Isolation Required? ]             |
+               [ Cut WAN at router; record time ]          |
+                                |                          |
+                                v                          |
+               [ Controlled Shutdown of Device ]           |
+               [ Label, photograph, disconnect ]           |
+                                |                          |
+                                v                          |
+        +--------------------------------------------------+
+        |
+        v
+  [ Non-Volatile Acquisition Sequence (E2 -> E3 -> E4 -> E5 -> E6) ]
+  [ Hash all artifacts with SHA-256 & update Chain-of-Custody ]</div>
+
+  <h3>3.2 Acquisition Plan & Tooling Matrix</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Source</th>
+        <th>Method & Tooling (Planned)</th>
+        <th>Expected Artifact</th>
+        <th>Validation Protocol</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>E1</strong></td>
+        <td>Camera RAM</td>
+        <td>Serial terminal connection (3.3V UART). Run read-only commands (<code>ps</code>, <code>netstat</code>, <code>dmesg</code>).<br><em>Tool: picocom / minicom, FTDI adapter (Planned tool, not run).</em></td>
+        <td><code>console_ram_capture.txt</code></td>
+        <td>Calculate SHA-256 immediately upon closing terminal capture.</td>
+      </tr>
+      <tr>
+        <td><strong>E2</strong></td>
+        <td>Network State</td>
+        <td>Administrative export of DHCP leases, NAT states, and DNS queries.<br><em>Tool: Router Admin Export, Wireshark (Planned tool, not run).</em></td>
+        <td><code>router_dhcp_nat.log</code></td>
+        <td>Calculate SHA-256 immediately upon export from router.</td>
+      </tr>
+      <tr>
+        <td><strong>E3</strong></td>
+        <td>SPI NOR Flash</td>
+        <td>Controlled shutdown; clip 8-pin SOIC clip to SPI flash; read twice.<br><em>Tool: flashrom v1.2+, CH341A programmer (Planned tool, not run).</em></td>
+        <td><code>spi_flash_image.bin</code></td>
+        <td>Calculate SHA-256 of Read 1; must match Read 2 bit-for-bit.</td>
+      </tr>
+      <tr>
+        <td><strong>E4</strong></td>
+        <td>MicroSD Card</td>
+        <td>Physical card removal; mount via hardware write-blocker; bit-stream image.<br><em>Tool: Tableau write-blocker, dc3dd / FTK Imager (Planned tool, not run).</em></td>
+        <td><code>microsd_image.raw</code></td>
+        <td>SHA-256 hash of card must equal SHA-256 of output image.</td>
+      </tr>
+      <tr>
+        <td><strong>E5</strong></td>
+        <td>Mobile App</td>
+        <td>Consensual logical backup of smartphone running LumiView app.<br><em>Tool: Android Backup Extractor (Planned tool, not run).</em></td>
+        <td><code>lumiview_app_data.tar</code></td>
+        <td>Calculate SHA-256 of extraction archive container.</td>
+      </tr>
+      <tr>
+        <td><strong>E6</strong></td>
+        <td>Cloud Records</td>
+        <td>Formal compliance export request for OAuth tokens, API calls, and video metadata.<br><em>Tool: Vendor Compliance Portal (Planned procedure, not run).</em></td>
+        <td><code>cloud_api_audit.json</code></td>
+        <td>Calculate SHA-256 immediately upon secure electronic delivery.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3.3 Risk Register</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Risk Description</th>
+        <th style="text-align: center;">Score (L×I)</th>
+        <th>Mitigation Strategy</th>
+        <th>Residual Risk</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>R1</strong></td>
+        <td>Volatile RAM lost at power cut</td>
+        <td style="text-align: center;"><span class="badge badge-warn">6 (2×3)</span></td>
+        <td>Keep device connected to UPS; label "DO NOT UNPLUG"; capture E1 over UART prior to shutdown.</td>
+        <td>Medium (RAM alters as device continues running).</td>
+      </tr>
+      <tr>
+        <td><strong>R2</strong></td>
+        <td>Remote wipe / cloud sync overwrite</td>
+        <td style="text-align: center;"><span class="badge badge-warn">6 (2×3)</span></td>
+        <td>Capture live network state (E2), then immediately block WAN routing at router level; request cloud preservation early.</td>
+        <td>Medium (Network isolation disrupts active connections).</td>
+      </tr>
+      <tr>
+        <td><strong>R4</strong></td>
+        <td>Hardware encryption or locked bootloader</td>
+        <td style="text-align: center;"><span class="badge badge-warn">6 (2×3)</span></td>
+        <td>Check UART for root console prompt; if locked, pivot to non-volatile storage analysis (E2, E4, E5, E6).</td>
+        <td>High (Hardware-level evidence may remain inaccessible).</td>
+      </tr>
+      <tr>
+        <td><strong>R5</strong></td>
+        <td>Cloud legal & authorization limits</td>
+        <td style="text-align: center;"><span class="badge badge-fail">9 (3×3)</span></td>
+        <td>Obtain written consent from account holder prior to analysis; request formal preservation letter to cloud vendor immediately.</td>
+        <td>Medium (Vendor may reject request or prune logs after retention window).</td>
+      </tr>
+      <tr>
+        <td><strong>R7</strong></td>
+        <td>Evidence contamination / alteration</td>
+        <td style="text-align: center;"><span class="badge badge-warn">6 (2×3)</span></td>
+        <td>Employ physical write-blockers; immediately baseline raw evidence with SHA-256; perform all parsing on working copies.</td>
+        <td>Low.</td>
+      </tr>
+      <tr>
+        <td><strong>R8</strong></td>
+        <td>Clock drift and timezone confusion</td>
+        <td style="text-align: center;"><span class="badge badge-fail">9 (3×3)</span></td>
+        <td>Compare device hardware clock with examiner NTP reference; convert all logged times to UTC while preserving original strings.</td>
+        <td>Medium (Hardware RTC may have drifted non-linearly).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION 4 -->
+  <h2>4. Analysis & Evidence Matrix</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Factual Observation</th>
+        <th>Technical Interpretation</th>
+        <th>Forensic Inference</th>
+        <th>Supports / Contradicts</th>
+        <th>Confidence</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>M1</strong></td>
+        <td>Cloud log records login at Day 1 23:55:02 UTC+05:30 with <code>session=S-0002 known=false</code>.</td>
+        <td>A new web/mobile session was authenticated against the cloud account.</td>
+        <td>An entity possessing valid credentials logged into the cloud; does not identify who controlled the session.</td>
+        <td><strong>Weakly supports H2, H4</strong>; Neutral for H1, H3</td>
+        <td><span class="badge badge-info">Low</span></td>
+      </tr>
+      <tr>
+        <td><strong>M2</strong></td>
+        <td>Cloud API log records <code>CMD_RECEIVED</code> for <code>cmd=set_motion_alert value=off session=S-0002</code> at Day 2 02:10:07, matching camera <code>CONFIG_CHANGE</code>.</td>
+        <td>The setting was updated via an authenticated cloud command received by the device.</td>
+        <td>The setting change can be explained entirely through cloud API messaging without requiring local device exploitation.</td>
+        <td><strong>Consistent with H2, H4, H3</strong> (if automated); Does not require H1</td>
+        <td><span class="badge badge-info">Low-Med</span></td>
+      </tr>
+      <tr>
+        <td><strong>M3</strong></td>
+        <td>Camera uploaded 3 video clips to <code>storage.lumicam.example</code> between 02:14:11 and 02:31:15.</td>
+        <td>The camera transmitted video payloads to the vendor's designated cloud storage endpoint.</td>
+        <td>Video uploads commenced 4 minutes after the configuration change. Demonstrates a temporal sequence, not causation.</td>
+        <td><strong>Compatible with all four</strong> (H1, H2, H3, H4)</td>
+        <td><span class="badge badge-info">Low</span></td>
+      </tr>
+      <tr>
+        <td><strong>M4</strong></td>
+        <td>The office owner stated the office was unoccupied and they did not disable alerts or view clips.</td>
+        <td>The registered account holder disclaims initiating the configuration change or video export.</td>
+        <td>Weakly suggests the owner did not knowingly make the change, but cannot rule out forgotten actions or shared credentials.</td>
+        <td><strong>Weakly contradicts H4</strong>; Consistent with H1, H2, H3</td>
+        <td><span class="badge badge-info">Low</span></td>
+      </tr>
+      <tr>
+        <td><strong>M5</strong></td>
+        <td>The camera was still powered on and operational at 09:05 when reported.</td>
+        <td>Volatile memory (E1) was not wiped by power cycling prior to reporting.</td>
+        <td>Live volatile state could theoretically be acquired if examined prior to power loss.</td>
+        <td><strong>Neutral</strong> across all hypotheses</td>
+        <td><span class="badge badge-info">Medium</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.1 Pending Artifacts (P1–P6)</h3>
+  <ul>
+    <li><strong>P1 (Cloud Session IP & Fingerprint):</strong> Would determine whether session S-0002 originated from an unknown foreign IP (H2) or a known user handset (H4).</li>
+    <li><strong>P2 (Cloud Command Token Audit):</strong> Would determine whether the 02:10 command was dispatched by user session S-0002 or a backend maintenance task (H3).</li>
+    <li><strong>P3 (Camera Console & Process List):</strong> Would determine whether unauthorized binaries were running on the camera (H1).</li>
+    <li><strong>P4 (SPI Flash Gold Hash Comparison):</strong> Would establish whether device firmware was modified (H1).</li>
+    <li><strong>P5 (Router Network PCAP):</strong> Would identify whether the camera communicated with non-vendor exfiltration addresses (H1).</li>
+    <li><strong>P6 (Mobile App Cache):</strong> Would confirm whether the owner's handset holds session records for S-0002 (H4 vs H2).</li>
+  </ul>
+
+  <!-- SECTION 5 -->
+  <h2>5. Reproducible Test (Technical Execution)</h2>
+  <p>The reproducible test tool (<code>evidence_tool.py</code>) was executed in PowerShell on Windows using <strong>Python 3.11.9</strong>. The tool enforces cryptographic hash gating, refusing to parse any evidence file that deviates from its baseline.</p>
+
+  <h3>5.1 Real Execution Outputs (Captured from Local Machine)</h3>
+
+  <p><strong>1. Initializing Baseline (`init`):</strong></p>
+  <pre><code>python evidence_tool.py init
+HASHED  camera_console_synthetic_A.log  ad1d0c5f2b7c80aff2ff6739173e5f14369561eb020b51d2476fdc495fe8ec4a
+HASHED  camera_console_synthetic_B.log  36f1c40006de149f172b7a9ae8c70911aadc02f3713e3c2e7aa6183dd590a583
+Baseline written to evidence_log.json</code></pre>
+
+  <p><strong>2. Baseline Verification (`verify`):</strong></p>
+  <pre><code>python evidence_tool.py verify
+OK        camera_console_synthetic_A.log
+OK        camera_console_synthetic_B.log
+OVERALL: PASS - all hashes match</code></pre>
+
+  <p><strong>3. Parsing Synthetic Log A (`parse`):</strong></p>
+  <pre><code>python evidence_tool.py parse --file evidence/camera_console_synthetic_A.log
+File: camera_console_synthetic_A.log
+SHA-256 now : ad1d0c5f2b7c80aff2ff6739173e5f14369561eb020b51d2476fdc495fe8ec4a
+Integrity   : OK
+
+Parsed 11 event(s); 1 malformed line(s) at line(s) [14]
+
+Timeline (sorted by UTC)
+UTC time             Local time as logged       Component    Event            Fields
+2026-01-10 13:10:00  2026-01-10T18:40:00+05:30  camerad      ARMED            mode=night
+2026-01-10 18:25:02  2026-01-10T23:55:02+05:30  cloud-agent  SESSION_SEEN     session=S-0002 known=false
+2026-01-10 20:40:07  2026-01-11T02:10:07+05:30  cloud-agent  CMD_RECEIVED     cmd=set_motion_alert value=off session=S-0002
+2026-01-10 20:40:07  2026-01-11T02:10:07+05:30  config       CONFIG_CHANGE    key=motion_alert old=on new=off
+2026-01-10 20:44:11  2026-01-11T02:14:11+05:30  uploader     UPLOAD_START     clip=clip_001 dest=storage.lumicam.example
+2026-01-10 20:44:40  2026-01-11T02:14:40+05:30  uploader     UPLOAD_DONE      clip=clip_001 dest=storage.lumicam.example
+2026-01-10 20:52:05  2026-01-11T02:22:05+05:30  uploader     UPLOAD_START     clip=clip_002 dest=storage.lumicam.example
+2026-01-10 20:52:33  2026-01-11T02:22:33+05:30  uploader     UPLOAD_DONE      clip=clip_002 dest=storage.lumicam.example
+2026-01-10 21:00:48  2026-01-11T02:30:48+05:30  uploader     UPLOAD_START     clip=clip_003 dest=storage.lumicam.example
+2026-01-10 21:01:15  2026-01-11T02:31:15+05:30  uploader     UPLOAD_DONE      clip=clip_003 dest=storage.lumicam.example
+2026-01-11 03:35:00  2026-01-11T09:05:00+05:30  camerad      STATUS           state=running
+
+Gap, first CONFIG_CHANGE to first UPLOAD_START: 4 min 4 s (timing only, not proof of cause)
+
+Observation flags (consistent-with only, NOT proof)
+  line 5   UNRECOGNISED_SESSION  session=S-0002 | A session is marked known=false | consistent with: H2, H4 (not proof)</code></pre>
+
+  <p><strong>4. Controlled Tamper Test & Refusal Gate:</strong></p>
+  <pre><code># Tamper with log A
+Add-Content evidence\camera_console_synthetic_A.log "# edit"
+
+# Verify detects tamper
+python evidence_tool.py verify
+MISMATCH  camera_console_synthetic_A.log
+OK        camera_console_synthetic_B.log
+OVERALL: FAIL - evidence changed, missing, or unlisted   (Exit code: 1)
+
+# Parse refuses execution
+python evidence_tool.py parse --file evidence/camera_console_synthetic_A.log
+File: camera_console_synthetic_A.log
+SHA-256 now : e10a4ebdcc2beec214ac697d5f20c6ced73533fdddcbe2e8c78eaae7306adf21
+Integrity   : MISMATCH
+Refusing to parse. Re-run 'verify', or use --allow-modified (this will be logged). (Exit code: 1)
+
+# Restoration from clean backup
+Copy-Item ..\backup_A.log evidence\camera_console_synthetic_A.log -Force
+python evidence_tool.py verify
+OK        camera_console_synthetic_A.log
+OK        camera_console_synthetic_B.log
+OVERALL: PASS - all hashes match   (Exit code: 0)</code></pre>
+
+  <!-- SECTION 6 -->
+  <h2>6. Limitations</h2>
+  <ol>
+    <li><strong>Synthetic Data Constraints:</strong> All logs, network flows, and session IDs analyzed are synthetic. Real IoT embedded systems exhibit asynchronous multi-threaded kernel noise, binary logging formats, and non-linear clock drift that require specialized reverse engineering.</li>
+    <li><strong>Hardware Hypothesis Untested (H1 Open):</strong> Because live physical hardware was not acquired or probed, hypothesis <strong>H1 (Device Compromise) remains untested rather than disproven</strong>. The absence of compromise indicators in high-level logs does not prove local security.</li>
+    <li><strong>Cryptographic Scope:</strong> A matching SHA-256 hash confirms that a file has remained unaltered <em>since the moment it was first hashed</em>; it cannot prove that the file was authentic or uncompromised when initially generated on the device.</li>
+    <li><strong>Heuristic Rule Boundaries:</strong> The four rules in <code>evidence_tool.py</code> represent demonstration detection patterns, not a complete intrusion detection engine. Attackers can masquerade processes under allowed names (e.g., <code>camerad</code>).</li>
+    <li><strong>Plain JSON Log Security:</strong> Storing the audit trail in a local plaintext JSON file is vulnerable to manipulation if the analyst workstation is compromised. In production forensics, logs must be written to append-only write-once media or a remote SIEM.</li>
+  </ol>
+
+  <!-- SECTION 7 -->
+  <h2>7. Qualified Conclusion</h2>
+  <p>Based strictly on the synthetic artifacts evaluated in the Section 4 Evidence Matrix:</p>
+  <ul>
+    <li><strong>Hypotheses Cannot Be Definitive:</strong> The available evidence cannot definitively isolate one single hypothesis among the four possibilities.</li>
+    <li><strong>Cloud-Side Leaning (Low Confidence):</strong> The technical facts confirm that the motion alert setting was altered through a command issued via the cloud API (<code>CMD_RECEIVED</code> matching <code>CONFIG_CHANGE</code> at 02:10:07) following a newly authenticated session (<code>S-0002</code> at 23:55:02). This sequence is slightly more consistent with cloud-side account interaction (<strong>H2: Cloud Account Misuse</strong> or <strong>H4: Authorized User Action</strong>) than with an isolated on-device hardware compromise (<strong>H1</strong>).</li>
+    <li><strong>Device Compromise (H1) and Malfunction (H3) Not Excluded:</strong> Because volatile RAM and SPI flash were not extracted, H1 is <strong>untested, not excluded</strong>. Similarly, backend cloud automation or synchronization failures (H3) could account for the setting change without human user interaction.</li>
+    <li><strong>The 4-Minute Gap is Not Proof of Causation:</strong> The 4-minute 4-second interval between the setting change (02:10) and the first video upload (02:14) represents a temporal correlation only. It does not establish that the setting change caused the uploads or that the same actor initiated both events.</li>
+    <li><strong>Attribution Boundaries:</strong> The findings do not name any individual, establish motive, or determine criminal intent. Forensic evidence demonstrates what state transitions occurred on the system; attribution of authorship requires corroborating external records.</li>
+  </ul>
+
+  <!-- SECTION 8 -->
+  <h2>8. Verified References</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 8%;">No.</th>
+        <th style="width: 45%;">Full Citation</th>
+        <th style="width: 25%;">Primary Application</th>
+        <th>Verification Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>NIST SP 800-86:</strong> <em>Guide to Integrating Forensic Techniques into Incident Response</em>. Kent et al., NIST, 2006. DOI: 10.6028/NIST.SP.800-86</td>
+        <td>Data acquisition from multiple source types</td>
+        <td><span class="badge badge-pass">Verified</span> (NIST CSRC)</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>NIST SP 800-101 Rev. 1:</strong> <em>Guidelines on Mobile Device Forensics</em>. Ayers et al., NIST, 2014. DOI: 10.6028/NIST.SP.800-101r1</td>
+        <td>Companion mobile app extraction planning (E5)</td>
+        <td><span class="badge badge-pass">Verified</span> (NIST CSRC)</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>ISO/IEC 27037:2012:</strong> <em>Guidelines for identification, collection, acquisition and preservation of digital evidence</em>. ISO/IEC, 2012.</td>
+        <td>Preserving digital evidence integrity and chain-of-custody</td>
+        <td><span class="badge badge-pass">Verified</span> (ISO Catalogue)</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>IETF RFC 3227:</strong> <em>Guidelines for Evidence Collection and Archiving</em>. Brezinski & Killalea, 2002.</td>
+        <td>Order of volatility hierarchy (E1 to E6)</td>
+        <td><span class="badge badge-pass">Verified</span> (IETF RFC Editor)</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><strong>IETF RFC 2606:</strong> <em>Reserved Top Level DNS Names</em>. Eastlake & Panitz, 1999.</td>
+        <td>Fictional <code>.example</code> domain usage</td>
+        <td><span class="badge badge-pass">Verified</span> (IETF RFC Editor)</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td><strong>IETF RFC 5737:</strong> <em>IPv4 Address Blocks Reserved for Documentation</em>. Arkko et al., 2010.</td>
+        <td>Documentation IP address ranges (<code>192.0.2.0/24</code>, <code>203.0.113.0/24</code>)</td>
+        <td><span class="badge badge-pass">Verified</span> (IETF RFC Editor)</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td><strong>NIST FIPS PUB 180-4:</strong> <em>Secure Hash Standard (SHS)</em>. NIST, 2015. DOI: 10.6028/NIST.FIPS.180-4</td>
+        <td>Cryptographic SHA-256 specification</td>
+        <td><span class="badge badge-pass">Verified</span> (NIST FIPS)</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td><strong>NIST SP 800-30 Rev. 1:</strong> <em>Guide for Conducting Risk Assessments</em>. NIST, 2012. DOI: 10.6028/NIST.SP.800-30r1</td>
+        <td>Likelihood and impact scoring methodology</td>
+        <td><span class="badge badge-pass">Verified</span> (NIST CSRC)</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td><strong>Python 3 Documentation:</strong> <em>The Python Standard Library</em> (v3.11.9). Python Software Foundation.</td>
+        <td>Technical implementation of <code>evidence_tool.py</code></td>
+        <td><span class="badge badge-pass">Verified</span> (docs.python.org)</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td><strong>Utility Documentation:</strong> <em>flashrom</em> manual, <em>picocom</em> documentation, <em>Wireshark</em> manual.</td>
+        <td>Planned serial and flash extraction procedures</td>
+        <td><span class="badge badge-pass">Verified</span> (Official docs)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION 9 -->
+  <h2>9. AI-Use Disclosure & Student Declaration</h2>
+
+  <h3>9.1 AI Assistance Disclosure</h3>
+  <p>Generative AI assistance (Claude / Anthropic and Gemini / Google) was utilized in drafting the scenario structure, initial boilerplate code for argument parsing, and standard reference identification. I independently configured the Python environment, executed the full tool run and tamper test on my machine, verified all outputs and SHA-256 hashes, checked reference citations against official portals, and authored the analytical evaluations and qualified conclusions.</p>
+
+  <div class="signature-card">
+    <h3 style="margin-top: 0; color: var(--primary);">Student Declaration</h3>
+    <p style="font-style: italic; margin-bottom: 16px;">
+      "I, <strong>DEEPTANSH NAGAR</strong> (Student ID: <strong>500121033</strong>), hereby declare that this submission represents my own individual academic work for Project Code <strong>DF-PBL-026</strong> (<em>IoT Device Forensic Plan</em>). All technical commands, terminal outputs, cryptographic hashes, and tamper tests documented in Section 5 were personally executed and validated on my local workstation. I independently checked all literature citations, evaluated the forensic matrix without assuming guilt or intent, and can explain, demonstrate, and defend every function in <code>evidence_tool.py</code> and every decision in this investigation memo."
+    </p>
+    <div style="display: flex; justify-content: space-between; font-size: 13.5px; border-top: 1px dashed #cbd5e1; padding-top: 10px;">
+      <div><strong>Signed:</strong> Deeptansh Nagar</div>
+      <div><strong>Date:</strong> October 27, 2026</div>
+      <div><strong>Program:</strong> B.Tech Digital Forensics & Cyber Security</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

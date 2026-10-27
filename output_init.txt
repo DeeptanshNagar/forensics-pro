@@ -1,0 +1,114 @@
+=== IoT Forensics Tool Execution Log ===
+Student Name : DEEPTANSH NAGAR
+Student ID   : 500121033
+Project Code : DF-PBL-026
+Case Title   : IoT Device Forensic Plan (SYNTHETIC Case)
+Environment  : Windows 11 (PowerShell), Python 3.11.9 / 3.14.3
+
+--------------------------------------------------------------------------------
+1. BASELINE INITIALIZATION
+Command: python evidence_tool.py init
+Output:
+HASHED  camera_console_synthetic_A.log  ad1d0c5f2b7c80aff2ff6739173e5f14369561eb020b51d2476fdc495fe8ec4a
+HASHED  camera_console_synthetic_B.log  36f1c40006de149f172b7a9ae8c70911aadc02f3713e3c2e7aa6183dd590a583
+Baseline written to evidence_log.json
+
+--------------------------------------------------------------------------------
+2. BASELINE VERIFICATION
+Command: python evidence_tool.py verify
+Output:
+OK        camera_console_synthetic_A.log
+OK        camera_console_synthetic_B.log
+OVERALL: PASS - all hashes match
+
+--------------------------------------------------------------------------------
+3. PARSE SYNTHETIC LOG A
+Command: python evidence_tool.py parse --file evidence/camera_console_synthetic_A.log
+Output:
+File: camera_console_synthetic_A.log
+SHA-256 now : ad1d0c5f2b7c80aff2ff6739173e5f14369561eb020b51d2476fdc495fe8ec4a
+Integrity   : OK
+
+Parsed 11 event(s); 1 malformed line(s) at line(s) [14]
+
+Timeline (sorted by UTC)
+UTC time             Local time as logged       Component    Event            Fields
+2026-01-10 13:10:00  2026-01-10T18:40:00+05:30  camerad      ARMED            mode=night
+2026-01-10 18:25:02  2026-01-10T23:55:02+05:30  cloud-agent  SESSION_SEEN     session=S-0002 known=false
+2026-01-10 20:40:07  2026-01-11T02:10:07+05:30  cloud-agent  CMD_RECEIVED     cmd=set_motion_alert value=off session=S-0002
+2026-01-10 20:40:07  2026-01-11T02:10:07+05:30  config       CONFIG_CHANGE    key=motion_alert old=on new=off
+2026-01-10 20:44:11  2026-01-11T02:14:11+05:30  uploader     UPLOAD_START     clip=clip_001 dest=storage.lumicam.example
+2026-01-10 20:44:40  2026-01-11T02:14:40+05:30  uploader     UPLOAD_DONE      clip=clip_001 dest=storage.lumicam.example
+2026-01-10 20:52:05  2026-01-11T02:22:05+05:30  uploader     UPLOAD_START     clip=clip_002 dest=storage.lumicam.example
+2026-01-10 20:52:33  2026-01-11T02:22:33+05:30  uploader     UPLOAD_DONE      clip=clip_002 dest=storage.lumicam.example
+2026-01-10 21:00:48  2026-01-11T02:30:48+05:30  uploader     UPLOAD_START     clip=clip_003 dest=storage.lumicam.example
+2026-01-10 21:01:15  2026-01-11T02:31:15+05:30  uploader     UPLOAD_DONE      clip=clip_003 dest=storage.lumicam.example
+2026-01-11 03:35:00  2026-01-11T09:05:00+05:30  camerad      STATUS           state=running
+
+Gap, first CONFIG_CHANGE to first UPLOAD_START: 4 min 4 s (timing only, not proof of cause)
+
+Observation flags (consistent-with only, NOT proof)
+  line 5   UNRECOGNISED_SESSION  session=S-0002 | A session is marked known=false | consistent with: H2, H4 (not proof)
+
+NOTE: Flags are observations from fixed rules. They do not show who acted or why.
+
+--------------------------------------------------------------------------------
+4. PARSE SYNTHETIC LOG B (Second Input Test)
+Command: python evidence_tool.py parse --file evidence/camera_console_synthetic_B.log
+Output:
+File: camera_console_synthetic_B.log
+SHA-256 now : 36f1c40006de149f172b7a9ae8c70911aadc02f3713e3c2e7aa6183dd590a583
+Integrity   : OK
+
+Parsed 9 event(s); 0 malformed line(s)
+
+Timeline (sorted by UTC)
+UTC time             Local time as logged       Component    Event            Fields
+2026-01-10 13:10:00  2026-01-10T18:40:00+05:30  camerad      ARMED            mode=night
+2026-01-10 20:39:58  2026-01-11T02:09:58+05:30  sysmon       PROC_START       name=unknown_proc pid=412
+2026-01-10 20:40:07  2026-01-11T02:10:07+05:30  config       CONFIG_CHANGE    key=motion_alert old=on new=off
+2026-01-10 20:42:30  2026-01-11T02:12:30+05:30  net          CONN_OUT         dest=203.0.113.50 port=443
+2026-01-10 20:44:11  2026-01-11T02:14:11+05:30  uploader     UPLOAD_START     clip=clip_001 dest=storage.lumicam.example
+2026-01-10 20:44:40  2026-01-11T02:14:40+05:30  uploader     UPLOAD_DONE      clip=clip_001 dest=storage.lumicam.example
+2026-01-10 20:52:05  2026-01-11T02:22:05+05:30  uploader     UPLOAD_START     clip=clip_002 dest=203.0.113.50
+2026-01-10 20:52:33  2026-01-11T02:22:33+05:30  uploader     UPLOAD_DONE      clip=clip_002 dest=203.0.113.50
+2026-01-11 03:35:00  2026-01-11T09:05:00+05:30  camerad      STATUS           state=running
+
+Gap, first CONFIG_CHANGE to first UPLOAD_START: 4 min 4 s (timing only, not proof of cause)
+
+Observation flags (consistent-with only, NOT proof)
+  line 4   UNLISTED_PROCESS      name=unknown_proc | A process name is not in the allowed list | consistent with: H1 (not proof)
+  line 5   CONFIG_WITHOUT_CMD    key=motion_alert new=off | Config change with no cloud command shortly before it | consistent with: H1, H3 (not proof)
+  line 6   NON_VENDOR_DEST       dest=203.0.113.50 | Traffic to a destination outside the vendor domain | consistent with: H1 (not proof)
+  line 9   NON_VENDOR_DEST       dest=203.0.113.50 | Traffic to a destination outside the vendor domain | consistent with: H1 (not proof)
+  line 10  NON_VENDOR_DEST       dest=203.0.113.50 | Traffic to a destination outside the vendor domain | consistent with: H1 (not proof)
+
+NOTE: Flags are observations from fixed rules. They do not show who acted or why.
+
+--------------------------------------------------------------------------------
+5. CONTROLLED TAMPER DETECTION TEST
+Command: Add-Content evidence\camera_console_synthetic_A.log "# edit"
+Command: python evidence_tool.py verify
+Output:
+MISMATCH  camera_console_synthetic_A.log
+OK        camera_console_synthetic_B.log
+OVERALL: FAIL - evidence changed, missing, or unlisted
+(Exit code: 1)
+
+Command: python evidence_tool.py parse --file evidence/camera_console_synthetic_A.log
+Output:
+File: camera_console_synthetic_A.log
+SHA-256 now : e10a4ebdcc2beec214ac697d5f20c6ced73533fdddcbe2e8c78eaae7306adf21
+Integrity   : MISMATCH
+Refusing to parse. Re-run 'verify', or use --allow-modified (this will be logged).
+(Exit code: 1)
+
+--------------------------------------------------------------------------------
+6. RESTORATION FROM VERIFIED BACKUP AND FINAL VERIFY
+Command: Copy-Item ..\backup_A.log evidence\camera_console_synthetic_A.log -Force
+Command: python evidence_tool.py verify
+Output:
+OK        camera_console_synthetic_A.log
+OK        camera_console_synthetic_B.log
+OVERALL: PASS - all hashes match
+(Exit code: 0)

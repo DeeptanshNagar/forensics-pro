@@ -1,0 +1,11 @@
+# SYNTHETIC LOG B - LumiCam C2 (fictional) - not real data
+# Same format and assumptions as Log A. Used to demonstrate a change of input.
+2026-01-10T18:40:00+05:30 | camerad | ARMED | mode=night
+2026-01-11T02:09:58+05:30 | sysmon | PROC_START | name=unknown_proc pid=412
+2026-01-11T02:10:07+05:30 | config | CONFIG_CHANGE | key=motion_alert old=on new=off
+2026-01-11T02:12:30+05:30 | net | CONN_OUT | dest=203.0.113.50 port=443
+2026-01-11T02:14:11+05:30 | uploader | UPLOAD_START | clip=clip_001 dest=storage.lumicam.example
+2026-01-11T02:14:40+05:30 | uploader | UPLOAD_DONE | clip=clip_001 dest=storage.lumicam.example
+2026-01-11T02:22:05+05:30 | uploader | UPLOAD_START | clip=clip_002 dest=203.0.113.50
+2026-01-11T02:22:33+05:30 | uploader | UPLOAD_DONE | clip=clip_002 dest=203.0.113.50
+2026-01-11T09:05:00+05:30 | camerad | STATUS | state=running
